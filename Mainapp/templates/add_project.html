@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% block title %}Add Project{% endblock %}
+
+{% block content %}
+<div class="py-5" style="background: linear-gradient(to bottom right, #e0f2ff, #f8fafc); min-height: 100vh;">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card shadow-lg border-0 rounded-4">
+          <div class="card-body p-5">
+            <h2 class="text-center mb-4 text-primary">Add New Project</h2>
+
+            <form method="POST" enctype="multipart/form-data" class="bg-white p-4 rounded shadow">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label for="id_title" class="form-label">Title</label>
+                    {{ form.title }}
+                </div>
+
+                <div class="mb-3">
+                    <label for="id_description" class="form-label">Description</label>
+                    {{ form.description }}
+                </div>
+
+                <div class="mb-3">
+                    <label for="id_image" class="form-label">Project Image</label>
+                    {{ form.image }}
+                    <img id="preview" src="#" alt="Image Preview" class="img-thumbnail mt-2 d-none" width="200">
+                </div>
+
+                 <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        const input = document.getElementById('id_image');
+                        const preview = document.getElementById('preview');
+
+                        input.addEventListener('change', function () {
+                        const file = this.files[0];
+                        if (file) {
+                            preview.src = URL.createObjectURL(file);
+                            preview.classList.remove('d-none');
+                        } else {
+                            preview.classList.add('d-none');
+                        }
+                        });
+                    });
+                 </script>
+
+
+    
+
+                <div class="mb-3">
+                    <label for="id_github_url" class="form-label">GitHub URL</label>
+                    {{ form.github_url }}
+                </div>
+
+                <div class="mb-3">
+                    <label for="id_link" class="form-label">Live Link</label>
+                    {{ form.link }}
+                </div>
+
+                <div class="mb-3">
+                    <label for="id_tags" class="form-label">Tags (comma separated)</label>
+                    {{ form.tags }}
+                </div>
+
+                <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                document.querySelectorAll('input, textarea, select').forEach(el => {
+                el.classList.add('form-control');
+                });
+               });
+            </script>
+
+           
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+{% endblock %}
