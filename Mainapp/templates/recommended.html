@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% block title %}Recommended Projects{% endblock %}
+
+{% block content %}
+<section class="py-5 bg-light">
+  <div class="container">
+
+    <h1 class="text-center text-primary fw-bold mb-4">
+      <span aria-hidden="true">✨</span> Recommended Projects
+    </h1>
+    <p class="text-center text-muted mb-5">
+      Projects suggested based on your interests, browsing history, and trending projects.
+    </p>
+
+    <!-- Filters -->
+    <div class="d-flex flex-wrap justify-content-center mb-4">
+      <span class="me-2 fw-semibold">Filter by Tag:</span>
+      <a href="{% url 'recommended' %}" 
+         class="btn btn-outline-secondary btn-sm mb-2 {% if not selected_tag %}active{% endif %}">All</a>
+      {% for tag in all_tags %}
+        <a href="?tag={{ tag }}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}" 
+           class="btn btn-outline-primary btn-sm mb-2 {% if selected_tag == tag %}active{% endif %}">{{ tag }}</a>
+      {% endfor %}
+    </div>
+
+    <!-- Sort Options -->
+    <div class="d-flex justify-content-center mb-5">
+      <span class="me-2 fw-semibold">Sort by:</span>
+      <a href="?sort=latest{% if selected_tag %}&tag={{ selected_tag }}{% endif %}" 
+         class="btn btn-outline-secondary btn-sm me-2 {% if selected_sort == 'latest' %}active{% endif %}">Latest</a>
+      <a href="?sort=popular{% if selected_tag %}&tag={{ selected_tag }}{% endif %}" 
+         class="btn btn-outline-primary btn-sm {% if selected_sort == 'popular' %}active{% endif %}">Most Popular</a>
+    </div>
+
+    <!-- Top Picks -->
+    {% if top_picks %}
+      <h3 class="mb-4 text-primary">Top Picks for You</h3>
+      <div class="row g-4 mb-5">
+        {% for project in top_picks %}
+          <div class="col-md-6">
+            <div class="card h-100 shadow-lg border-0 rounded-4 position-relative">
+
+              {% if project.label %}
+                <span class="badge bg-warning text-dark position-absolute top-0 end-0 m-2" style="z-index:10;">
+                  {{ project.label|safe }}
+                </span>
+              {% endif %}
+
+              {% if project.image %}
+                <div class="position-relative" style="height:300px; overflow:hidden; border-radius:0.75rem;">
+                  <img src="{{ project.image.url }}" alt="{{ project.title }}" 
+                       class="card-img-top position-absolute top-0 start-0 w-100 h-100"
+                       style="object-fit:cover; transition:opacity 0.6s ease; opacity:1;"
+                       loading="lazy">
+                </div>
+              {% endif %}
+
+              <div class="card-body">
+                <h5 class="card-title">{{ project.title }}</h5>
+                <p class="card-text text-muted">{{ project.description|truncatewords:35 }}</p>
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                  {% if project.github_url %}
+                    <a href="{{ project.github_url }}" target="_blank" class="text-decoration-none text-dark">
+                      <i class="fab fa-github me-1"></i> GitHub
+                    </a>
+                  {% else %}
+                    <span class="text-muted">No GitHub</span>
+                  {% endif %}
+                  <div>
+                    {% if project.link %}
+                      <a href="{{ project.link }}" target="_blank" class="btn btn-outline-primary btn-sm me-2">
+                        <i class="fas fa-external-link-alt"></i> Live
+                      </a>
+                    {% else %}
+                      <span class="text-muted me-2">No Live</span>
+                    {% endif %}
+                    <a href="{% url 'project_detail' project.id %}" class="btn btn-outline-secondary btn-sm">
+                      <i class="fas fa-info-circle"></i> Details
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- Other Recommended Projects -->
+    {% if projects %}
+      <h3 class="mb-4 text-primary">More Recommendations</h3>
+      <div class="row g-4">
+        {% for project in projects %}
+          <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:'1' }}00">
+            <div class="card h-100 shadow-sm border-0 rounded-4 position-relative">
+              {% if project.label %}
+                <span class="badge bg-warning text-dark position-absolute top-0 end-0 m-2" style="z-index:10;">
+                  {{ project.label|safe }}
+                </span>
+              {% endif %}
+              {% if project.image %}
+                <div class="position-relative" style="height:220px; overflow:hidden; border-radius:0.75rem;">
+                  <img src="{{ project.image.url }}" alt="{{ project.title }}" 
+                       class="card-img-top position-absolute top-0 start-0 w-100 h-100"
+                       style="object-fit:cover; transition:opacity 0.6s ease; opacity:1;"
+                       loading="lazy">
+                </div>
+              {% endif %}
+              <div class="card-body">
+                <h5 class="card-title">{{ project.title }}</h5>
+                <p class="card-text text-muted">{{ project.description|truncatewords:25 }}</p>
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                  {% if project.github_url %}
+                    <a href="{{ project.github_url }}" target="_blank" class="text-decoration-none text-dark">
+                      <i class="fab fa-github me-1"></i> GitHub
+                    </a>
+                  {% else %}
+                    <span class="text-muted">No GitHub</span>
+                  {% endif %}
+                  <div>
+                    {% if project.link %}
+                      <a href="{{ project.link }}" target="_blank" class="btn btn-outline-primary btn-sm me-2">
+                        <i class="fas fa-external-link-alt"></i> Live
+                      </a>
+                    {% else %}
+                      <span class="text-muted me-2">No Live</span>
+                    {% endif %}
+                    <a href="{% url 'project_detail' project.id %}" class="btn btn-outline-secondary btn-sm">
+                      <i class="fas fa-info-circle"></i> Details
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-center text-secondary fs-5">No recommended projects available.</p>
+    {% endif %}
+
+  </div>
+</section>
+{% endblock %}

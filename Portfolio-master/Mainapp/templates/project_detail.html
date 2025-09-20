@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- AOS CSS -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+<div class="container py-2">
+    <div class="card shadow-lg p-5 relative">
+
+        <!-- Skeleton Loader -->
+        <div id="loader" class="absolute inset-0 bg-white flex flex-col gap-4 p-5 z-50">
+            <div class="h-8 w-1/2 bg-gray-300 rounded animate-pulse"></div>
+            <div class="h-4 w-1/4 bg-gray-200 rounded animate-pulse"></div>
+            <div class="h-64 w-full bg-gray-300 rounded animate-pulse"></div>
+            <div class="h-4 w-3/4 bg-gray-200 rounded animate-pulse"></div>
+            <div class="h-4 w-2/3 bg-gray-200 rounded animate-pulse"></div>
+            <div class="flex gap-3 mt-4">
+                <div class="h-10 w-28 bg-gray-300 rounded animate-pulse"></div>
+                <div class="h-10 w-28 bg-gray-300 rounded animate-pulse"></div>
+            </div>
+        </div>
+
+        <!-- Main Project Content -->
+        <div id="project-content" class="opacity-0 transition-opacity duration-500">
+
+            <!-- Title -->
+            <h1 class="mb-2 text-3xl font-extrabold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+                data-aos="fade-down">
+                {{ project.title }}
+            </h1>
+
+            <!-- Meta -->
+            <p class="text-sm text-gray-500 mb-4" data-aos="fade-down" data-aos-delay="200">
+                📅 {{ project.created_at|date:"M d, Y" }}
+                {% if project.tags %} | 🏷️ {{ project.tags }} {% endif %}
+            </p>
+
+            <!-- Image -->
+            {% if project.image %}
+            <img src="{{ project.image.url }}" alt="{{ project.title }}"
+                 class="img-fluid rounded mb-4 shadow"
+                 data-aos="zoom-in" data-aos-delay="300">
+            {% endif %}
+
+            <!-- Description -->
+            <p class="text-muted leading-relaxed" data-aos="fade-up" data-aos-delay="400">
+                {{ project.description }}
+            </p>
+
+            <!-- Overview -->
+            <h3 class="mt-5 font-bold underline text-blue-600 text-xl"
+                data-aos="fade-right" data-aos-delay="500">
+                Project Overview
+            </h3><br>
+
+           <div class="grid gap-6">
+    {% if project.details.exists %}
+        {% for detail in project.details.all %}
+            <div class="p-4 border-l-4 border-blue-500 bg-gray-50 rounded shadow-sm transition hover:shadow-md
+                        {% if forloop.counter|divisibleby:2 %} self-end text-right {% else %} text-left {% endif %}"
+                 data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:5 }}00">
+                {{ detail.descriptions|linebreaks }}
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="text-muted" data-aos="fade-up">No features added yet.</p>
+    {% endif %}
+</div>
+
+
+           <!-- Buttons -->
+            <div class="mt-4 d-flex justify-content-center gap-2">
+                {% if project.github_url %}
+                    <a href="{{ project.github_url }}" target="_blank" class="btn btn-dark">
+                        <i class="fab fa-github me-1"></i> GitHub
+                    </a>
+                {% endif %}
+                {% if project.link %}
+                    <a href="{{ project.link }}" target="_blank" class="btn btn-primary">
+                        <i class="fas fa-external-link-alt me-1"></i> Live Demo
+                    </a>
+                {% endif %}
+            </div>
+
+
+            <!-- Related Projects -->
+            {% if related_projects %}
+            <hr class="my-6">
+            <h3 class="text-xl font-semibold mb-3" data-aos="fade-left">🔗 Related Projects</h3>
+            <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+                {% for related in related_projects %}
+                <a href="{% url 'project_detail' related.id %}"
+                   class="p-3 rounded-lg shadow hover:shadow-lg transition block"
+                   data-aos="zoom-in" data-aos-delay="{{ forloop.counter0|add:4 }}00">
+                   {% if related.image %}
+                   <img src="{{ related.image.url }}" alt="{{ related.title }}"
+                        class="rounded mb-2 h-40 w-full object-cover">
+                   {% endif %}
+                   <h4 class="font-bold text-lg">{{ related.title }}</h4>
+                </a>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+<!-- AOS -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+  AOS.init({ duration: 800, once: true });
+
+  // Loader
+  window.addEventListener("load", () => {
+      const loader = document.getElementById("loader");
+      const content = document.getElementById("project-content");
+      setTimeout(() => {
+          loader.style.display = "none";
+          content.classList.remove("opacity-0");
+      }, 1200);
+  });
+</script>
+
+<!-- ✅ Correct FontAwesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous">
+{% endblock %}

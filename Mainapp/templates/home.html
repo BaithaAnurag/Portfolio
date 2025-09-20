@@ -1,0 +1,373 @@
+{% extends 'base.html' %}
+ {% load static %}
+
+ {% block title %}Home - Portfolio{% endblock %}
+
+ {% block content %}
+
+  <!--Success/Error Messages -->
+      {% if messages %}
+        {% for message in messages %}
+          <div id="alertMessage"
+              class="alert alert-success text-center fw-semibold py-2 small m-0 shadow-sm"
+              role="alert"
+              style="position: fixed; top: 20px; right: 20px; z-index: 1100;">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const alert = document.getElementById("alertMessage");
+        if (alert) {
+          setTimeout(() => {
+            alert.style.transition = "opacity 1s ease";
+            alert.style.opacity = "0";
+            setTimeout(() => alert.remove(), 1000);
+          }, 5000);
+        }
+      });
+    </script>
+
+    <!-- AOS -->
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script>AOS.init({ duration: 1000, once: true });</script>
+
+    <!-- Hero Section -->
+    <section id="hero"
+            class="min-h-screen flex flex-col justify-center items-center text-center px-3 sm:px-8 relative overflow-hidden hero-bg">
+
+      <!-- Floating Shapes -->
+      <div class="floating-shape bg-primary-subtle" style="top:-50px; left:-50px; width:150px; height:150px;"></div>
+      <div class="floating-shape bg-info-subtle" style="bottom:-60px; right:-60px; width:200px; height:200px; animation-duration:8s;"></div>
+
+      <!-- Profile -->
+      <img src="{{ profile.image.url }}" alt="Profile picture of {{ profile.name }}"
+          class="w-70 sm:w-80 md:w-96 h-auto rounded-xl shadow-lg ring-4 ring-white ring-offset-4 ring-offset-blue-100 transition-transform duration-500 hover:scale-105 hover:shadow-2xl z-10"
+          loading="lazy">
+
+      <h1 class="text-5xl md:text-5xl font-bold text-gray-800 tracking-tight mt-5 mb-4 z-10">
+        Hi, I’m
+        <span class="text-blue-600 inline-block ml-2 name-animated">Anurag Baitha</span>
+      </h1>
+
+      <p class="text-xl sm:text-2xl text-gray-700 max-w-xl mx-auto font-semibold underline decoration-blue-500 underline-offset-4 z-10">
+        Full Stack Django Developer | Backend Specialist | Python Enthusiast
+      </p>
+
+      <div class="mt-6 flex gap-4 z-10">
+        <a href="#projects" class="btn btn-primary btn-lg" aria-label="View my work">View My Work</a>
+        <a href="#contact" class="btn btn-outline-dark btn-lg" aria-label="Hire me">Hire Me</a>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-5 relative bg-gradient-to-br from-cyan-50 to-white overflow-hidden" data-aos="fade-up">
+      <div class="floating-shape bg-primary-subtle" style="top:-50px; left:-50px; width:200px; height:200px;"></div>
+      <div class="floating-shape bg-warning-subtle" style="bottom:-70px; right:-70px; width:250px; height:250px;"></div>
+
+      <div class="container relative z-10">
+        <h2 class="text-center text-primary fw-bold mb-5">About Me</h2>
+        <p class="fs-5 text-muted mx-auto text-justify" style="max-width:750px; line-height:1.8;">
+          Hi, I’m <strong>Anurag Kumar Baitha</strong>, a passionate Django developer from Nepal.
+          I love turning ideas into real-world web applications that are <strong>fast, secure, and user-friendly</strong>.
+          My expertise includes <strong>Python, Django, REST APIs, and full-stack web development</strong>.
+          I’m always eager to learn new technologies and build projects that make an impact.
+          I enjoy collaborating with teams and delivering solutions that provide a great user experience.
+        </p>
+
+        <!-- Skills -->
+        <div class="d-flex justify-content-center flex-wrap mt-4 gap-2">
+          <span class="badge bg-primary">Python</span>
+          <span class="badge bg-success">Django</span>
+          <span class="badge bg-info text-dark">REST API</span>
+          <span class="badge bg-warning text-dark">Full-Stack</span>
+          <span class="badge bg-secondary">HTML/CSS/JS</span>
+          <span class="badge bg-danger">Bootstrap</span>
+        </div>
+      </div>
+    </section>
+
+    <!--Projects Section -->
+<section id="projects" class="py-5 bg-gradient-to-br from-cyan-50 to-white">
+  <div class="container">
+    <h2 class="text-center text-primary fw-bold mb-5">
+      <span aria-hidden="true">🚀</span> Projects
+    </h2>
+    <p class="text-center text-muted mb-5">
+      Here are some of my featured works. Each project includes GitHub code and a live demo if available.
+    </p>
+
+    {% if projects %}
+      <div class="row g-4">
+        {% for project in projects %}
+          <div class="col-md-6 col-lg-4" data-aos="zoom-in" data-aos-delay="{{ forloop.counter0|add:'1' }}00">
+            <div class="card h-100 shadow-sm border-0 rounded-4">
+
+              {% if project.image %}
+                <div class="position-relative"
+                     style="height:220px; overflow:hidden; border-top-left-radius:0.75rem; border-top-right-radius:0.75rem;">
+
+                  <!-- Spinner loader -->
+                  <div class="image-loader bg-light w-100 h-100 d-flex align-items-center justify-content-center">
+                    <span class="spinner-border text-primary"
+                          role="status"
+                          aria-hidden="true"
+                          style="width:1.5rem; height:1.5rem;"></span>
+                  </div>
+
+                  <!-- Actual image -->
+                  <img src="{{ project.image.url }}"
+                       alt="Preview of {{ project.title }}"
+                       class="card-img-top position-absolute top-0 start-0 w-100 h-100"
+                       style="object-fit:cover; transition:opacity 0.6s ease; opacity:0;"
+                       loading="lazy"
+                       srcset="{{ project.image.url }} 600w,
+                               {{ project.image.url }} 1200w"
+                       sizes="(max-width: 576px) 100vw, 
+                              (max-width: 992px) 50vw, 
+                              33vw"
+                       onload="this.style.opacity=1; this.previousElementSibling.style.display='none';">
+                </div>
+              {% endif %}
+
+              <div class="card-body">
+                <h5 class="card-title">{{ project.title }}</h5>
+                <p class="card-text text-muted">{{ project.description|truncatewords:25 }}</p>
+
+                {% if project.tags_list %}
+                  <div class="mb-2">
+                    {% for tag in project.tags_list %}
+                      <span class="badge bg-info-subtle text-info">{{ tag }}</span>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                  {% if project.github_url %}
+                    <a href="{{ project.github_url }}" target="_blank"
+                       class="text-decoration-none text-dark d-flex align-items-center"
+                       aria-label="View GitHub repository for {{ project.title }}">
+                      <i class="fab fa-github me-1"></i> GitHub
+                    </a>
+                  {% else %}
+                    <span class="text-muted">No GitHub</span>
+                  {% endif %}
+
+                  <div>
+                    {% if project.link %}
+                      <a href="{{ project.link }}" target="_blank"
+                         class="btn btn-outline-primary btn-sm me-2"
+                         aria-label="View live demo of {{ project.title }}">
+                        <i class="fas fa-external-link-alt"></i> Live
+                      </a>
+                    {% else %}
+                      <span class="text-muted me-2">No Live</span>
+                    {% endif %}
+                    <a href="{% url 'project_detail' project.id %}"
+                       class="btn btn-outline-secondary btn-sm"
+                       aria-label="View details of {{ project.title }}">
+                      <i class="fas fa-info-circle"></i> Details
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-center text-secondary fs-5">
+        No projects found. Add some from the admin panel.
+      </p>
+    {% endif %}
+  </div>
+</section>
+
+
+<!-- Floating Chat Widget -->
+<div id="chat-widget" style="position: fixed; bottom: 20px; right: 20px; width: 350px; max-width: 90%; z-index: 1000; font-family: Arial, sans-serif; box-shadow: 0 4px 12px rgba(0,0,0,0.2); border-radius: 10px; overflow: hidden;">
+    <!-- Header -->
+    <div id="chat-header" style="background: #4f46e5; color: white; padding: 12px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+        <span>Chat with AI</span>
+        <button id="chat-close" style="background: transparent; border: none; color: white; font-size: 16px; cursor: pointer;">✖</button>
+    </div>
+
+    <!-- Body -->
+    <div id="chat-body" style="max-height: 400px; display: none; flex-direction: column; background: #f9f9f9;">
+        <div id="chat-messages" style="flex: 1; padding: 10px; overflow-y: auto;"></div>
+        <div style="border-top: 1px solid #ccc; padding: 8px;">
+            <input type="text" id="chat-input" placeholder="Type a message..." style="width: 100%; padding: 8px; font-size: 14px; outline: none; border-radius: 5px; border: 1px solid #ccc;" />
+        </div>
+        <div id="typing-indicator" style="padding: 5px 10px; font-size: 12px; color: #555; display: none;">AI is typing...</div>
+    </div>
+</div>
+
+<script>
+const header = document.getElementById("chat-header");
+const closeBtn = document.getElementById("chat-close");
+const body = document.getElementById("chat-body");
+const messagesDiv = document.getElementById("chat-messages");
+const input = document.getElementById("chat-input");
+const typingIndicator = document.getElementById("typing-indicator");
+
+// Toggle chat open/close smoothly
+header.addEventListener("click", e => {
+    if (e.target.id !== "chat-close") {
+        if (body.style.display === "none") {
+            body.style.display = "flex";
+            body.style.opacity = 0;
+            setTimeout(() => { body.style.opacity = 1; body.style.transition = "opacity 0.3s"; }, 10);
+        } else {
+            body.style.opacity = 0;
+            setTimeout(() => { body.style.display = "none"; }, 300);
+        }
+    }
+});
+
+// Close button
+closeBtn.onclick = () => {
+    body.style.opacity = 0;
+    setTimeout(() => { body.style.display = "none"; }, 300);
+};
+
+// Scroll helper
+function scrollToBottom() {
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+
+// Send message
+input.addEventListener("keypress", function(e) {
+    if (e.key === "Enter" && input.value.trim() !== "") {
+        const userMsg = input.value;
+        messagesDiv.innerHTML += `<div style="text-align:right; margin:5px 0;"><span style="background:#4f46e5; color:white; padding:8px 12px; border-radius:15px; display:inline-block; max-width: 80%;">${userMsg}</span></div>`;
+        input.value = "";
+        scrollToBottom();
+
+        typingIndicator.style.display = "block";  // Show typing
+
+        fetch("/api/chat/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "X-CSRFToken": "{{ csrf_token }}" },
+            body: JSON.stringify({ message: userMsg })
+        })
+        .then(res => res.json())
+        .then(data => {
+            typingIndicator.style.display = "none";  // Hide typing
+            if (data.reply) {
+                messagesDiv.innerHTML += `<div style="text-align:left; margin:5px 0;"><span style="background:#e5e7eb; color:#111; padding:8px 12px; border-radius:15px; display:inline-block; max-width: 80%;">${data.reply}</span></div>`;
+                scrollToBottom();
+            } else if(data.error){
+                messagesDiv.innerHTML += `<div style="color:red;"><b>Error:</b> ${data.error}</div>`;
+                scrollToBottom();
+            }
+        })
+        .catch(err => {
+            typingIndicator.style.display = "none";
+            messagesDiv.innerHTML += `<div style="color:red;"><b>Error:</b> ${err}</div>`;
+            scrollToBottom();
+        });
+    }
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!--  Contact Section -->
+    <section id="contact" class="py-5 bg-light" data-aos="fade-up">
+      <div class="container">
+        <h2 class="text-center text-primary fw-bold mb-4">
+          <span aria-hidden="true">📬</span> Get in Touch
+        </h2>
+        <p class="text-center text-muted mb-5">
+          Have a project idea, job opportunity, or just want to say hi? Fill out the form below and I’ll get back to you.
+        </p>
+
+        <div class="card shadow border-0 rounded-4 p-5">
+          <form method="post" action="{% url 'contact' %}" class="mx-auto" style="max-width: 900px;">
+            {% csrf_token %}
+            <div class="row g-4">
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">
+                  <i class="fas fa-user me-2 text-primary"></i> Name
+                </label>
+                <input type="text" name="name" class="form-control rounded-3" placeholder="Enter your name" required autocomplete="name">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">
+                  <i class="fas fa-envelope me-2 text-primary"></i> Email
+                </label>
+                <input type="email" name="email" class="form-control rounded-3" placeholder="Enter your email" required autocomplete="email">
+              </div>
+              <div class="col-12">
+                <label class="form-label fw-semibold">
+                  <i class="fas fa-comment-dots me-2 text-primary"></i> Message
+                </label>
+                <textarea name="message" class="form-control rounded-3" rows="6" placeholder="Write your message here..." required></textarea>
+              </div>
+              <div class="col-12 text-center">
+                <button type="submit" id="submitBtn" class="btn btn-primary btn-lg rounded-3 shadow-sm px-5">
+                  <span id="btnText"><i class="fas fa-paper-plane me-2"></i> Send Message</span>
+                  <span id="btnSpinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ✅ Floating animation CSS -->
+    <style>
+    .hero-bg { background: linear-gradient(135deg, #e0f0ff, #ffffff); }
+    .floating-shape {
+      position: absolute;
+      border-radius: 50%;
+      animation: float 6s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0) translateX(0); }
+      50% { transform: translateY(15px) translateX(15px); }
+    }
+    </style>
+
+    <!-- ✅ Contact Form Submit Spinner -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector("form");
+        const submitBtn = document.getElementById("submitBtn");
+        const btnText = document.getElementById("btnText");
+        const btnSpinner = document.getElementById("btnSpinner");
+
+        if (form) {
+          form.addEventListener("submit", function () {
+            submitBtn.disabled = true;
+            btnSpinner.classList.remove("d-none");
+            btnText.classList.add("opacity-50");
+          });
+        }
+      });
+    </script>
+
+
+
+{% endblock %}
