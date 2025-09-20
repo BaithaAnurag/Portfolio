@@ -3,4 +3,7 @@ gunicorn==23.0.0
 pillow==11.2.1
 openai==1.107.2
 python-dotenv == 1.1.1
+pandas == 2.3.2
+scikit-learn==1.7.2
+
 
